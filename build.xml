@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     07.11.2009 02:37:41                                                        
+
+     RandomAccessMachine    - build file 
+
+     ====================================================================== -->
+<project name="RandomAccessMachine" default="default">
+	<description>
+	</description>
+
+	<!-- ================================= 
+          target: compile              
+         ================================= -->
+	<target name="compile" depends="" description="compiles the project">
+		<mkdir dir="bin" />
+		<javac srcdir="src/" destdir="bin" debug="on" />
+	</target>
+
+	<!-- ================================= 
+          target: jar              
+         ================================= -->
+	<target name="jar" depends="compile" description="pack as jar">
+		<jar destfile="ram.jar">
+			<fileset dir="bin/">
+			</fileset>
+			<manifest>
+				<attribute name="Main-Class" value="weigl.ram.Execute" />
+			</manifest>
+		</jar>
+	</target>
+
+
+
+	<!-- ================================= 
+          target: default              
+         ================================= -->
+	<target name="default" depends="jar" description="">
+
+	</target>
+</project>
