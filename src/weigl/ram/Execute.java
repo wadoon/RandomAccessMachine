@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Arrays;
 
+import weigl.ram.commands.Command;
+import weigl.ram.compiler.BrainFuckCompiler;
 import weigl.ram.listeners.LogarithmCosts;
 import weigl.ram.listeners.MachineAdapter;
 import weigl.ram.listeners.UniformCosts;
@@ -23,10 +25,11 @@ public class Execute {
 	static boolean GUI = false;
 	static boolean CONSOLE = false;
 	static boolean WAIT = false;
+	static boolean BRAINFUCK = false;
 
 	public static void main(String[] args) {
 		try {
-			GetOpt go = new GetOpt(args, "lugvw");
+			GetOpt go = new GetOpt(args, "blugvw");
 			int i;
 			while ((i = go.getNextOption()) > 0) {
 				switch (i) {
@@ -45,33 +48,43 @@ public class Execute {
 				case 'w':
 					WAIT = true;
 					break;
+				case 'b':
+					BRAINFUCK = true;
+					break;
 				}
 			}
 
 			args = go.getCmdArgs();
+			RAMachine machine;
 			Reader r = args.length > 0 ? new FileReader(args[0])
 					: new InputStreamReader(System.in);
-
-			Parser p = new Parser(r);
-			RAMachine machine = new RAMachine(p.getCommands());
+			if (BRAINFUCK) {
+				BrainFuckCompiler bfc = new BrainFuckCompiler(r);
+				Command[] c = bfc.parse();
+				System.out.println(Arrays.toString(c));
+				machine = new RAMachine(c);
+			} else {
+				Parser p = new Parser(r);
+				machine = new RAMachine(p.getCommands());
+			}
 
 			if (GUI) {
 				final RegistersView rw = new RegistersView();
 				rw.pack();
 				rw.setVisible(true);
-				machine.addListner(new ListenerEDTAdapter(rw));
+				machine.addListener(new ListenerEDTAdapter(rw));
 			}
 			if (CONSOLE)
-				machine.addListner(new ConsoleMachineListener(System.out));
+				machine.addListener(new ConsoleMachineListener(System.out));
 
 			if (WAIT)
-				machine.addListner(new WaitListener(100));
+				machine.addListener(new WaitListener(1000));
 			if (LOG_COST)
-				machine.addListner(new LogarithmCosts());
+				machine.addListener(new LogarithmCosts());
 			if (UNI_COST)
-				machine.addListner(new UniformCosts());
+				machine.addListener(new UniformCosts());
 
-			machine.addListner(new MachineAdapter() {
+			machine.addListener(new MachineAdapter() {
 				@Override
 				public void machineStop(RAMachine machine) {
 					System.err

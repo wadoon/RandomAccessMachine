@@ -99,10 +99,10 @@ public class MachineApplet extends JApplet {
 				tabPane.addTab("run-" + (run++), sp );
 				tabPane.setSelectedIndex(1);
 
-				rm.addListner(new ListenerEDTAdapter(
+				rm.addListener(new ListenerEDTAdapter(
 						new ConsoleMachineListener(createTextLog(txtLog))));
-				rm.addListner(new WaitListener(DELAY));
-				rm.addListner(new ListenerEDTAdapter(rw));
+				rm.addListener(new WaitListener(DELAY));
+				rm.addListener(new ListenerEDTAdapter(rw));
 				rm.start();
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(MachineApplet.this, e1

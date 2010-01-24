@@ -15,24 +15,22 @@ import weigl.ram.RAMachine;
  */
 public class Goto extends AbstractCommand {
 
-	private String param;
 	private Map<String, Integer> jumpTable;
 
 	public Goto(Map<String, Integer> jumpTable, String p) {
 		super(p, COMMANDS_TABLE.GOTO);
-		param = p;
 		this.jumpTable = jumpTable;
 	}
 
 	public void exec(RAMachine machine) {
 
 		try {
-			machine.setInstruction(machine.rget(param) - 1);
+			machine.setInstruction(machine.rget(operand) - 1);
 		} catch (NumberFormatException e) {
 			try {
-				machine.setInstruction(jumpTable.get(param) - 1);
+				machine.setInstruction(jumpTable.get(operand) - 1);
 			} catch (Exception e1) {
-				System.err.println(param + " label unknown");
+				System.err.println(operand + " label unknown");
 				machine.end();
 			}
 		}
@@ -41,6 +39,10 @@ public class Goto extends AbstractCommand {
 	@Override
 	public COMMANDS_TABLE getType() {
 		return COMMANDS_TABLE.GOTO;
+	}
+
+	public void setOperand(String jumpAddress) {
+		operand=jumpAddress;
 	}
 
 }

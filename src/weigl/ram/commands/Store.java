@@ -18,7 +18,9 @@ public class Store extends AbstractCommand {
 	}
 
 	public void exec(RAMachine machine) {
-		machine.rset(machine.rget(operand), machine.rget(0));
+		int where = machine.rget(operand);
+		int value = machine.rget(0);
+		machine.rset(where , value);
 		machine.nextInstruction();
 	}
 

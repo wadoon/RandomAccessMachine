@@ -19,7 +19,9 @@ public class Add extends AbstractCommand {
 	}
 
 	public void exec(RAMachine machine) {
-		machine.rset(0, machine.rget(0) + machine.rget(operand));
+		int s = machine.rget(0);
+		int t = machine.rget(operand);
+		machine.rset(0, s+t);
 		machine.nextInstruction();
 	}
 }

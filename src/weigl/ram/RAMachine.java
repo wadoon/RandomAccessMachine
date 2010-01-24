@@ -16,7 +16,7 @@ public class RAMachine {
 		commands = c;
 	}
 
-	public void addListner(MachineListener ml) {
+	public void addListener(MachineListener ml) {
 		listener.add(ml);
 	}
 
@@ -83,9 +83,12 @@ public class RAMachine {
 			return Integer.parseInt(index.substring(1));
 		case '*':
 			pos = rget(Integer.parseInt(index.substring(1)));
+			break;
 		default:
 			pos = Integer.parseInt(index);
 		}
+
+		
 		if (pos > 0) {
 			return rget(pos);
 		} else {
@@ -117,17 +120,17 @@ public class RAMachine {
 
 	public void nextInstruction() {
 		curline++;
-//		System.out.format("b:=%d\n", curline);
+		// System.out.format("b:=%d\n", curline);
 	}
 
 	public void setInstruction(int i) {
 		curline = i;
-//		System.out.format("b:=%d\n", curline);
+		// System.out.format("b:=%d\n", curline);
 	}
 
 	public void end() {
 		curline = Integer.MAX_VALUE;
-//		System.out.format("END\n", curline);
+		// System.out.format("END\n", curline);
 	}
 
 	public Command[] getCommands() {
