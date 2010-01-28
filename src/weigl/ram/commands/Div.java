@@ -18,7 +18,7 @@ public class Div extends AbstractCommand implements Command {
 
 	public void exec(RAMachine machine) {
 		try {
-			int i = machine.rget(0) % machine.rget(operand);
+			int i = machine.rget(0) / machine.rget(operand);
 			machine.rset(0, i);
 			machine.nextInstruction();
 		} catch (ArithmeticException e) {

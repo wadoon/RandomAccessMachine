@@ -30,4 +30,9 @@ public class End implements Command {
 	public COMMANDS_TABLE getType() {
 		return COMMANDS_TABLE.END;
 	}
+
+	@Override
+	public String repr() {
+		return toString();
+	}
 }

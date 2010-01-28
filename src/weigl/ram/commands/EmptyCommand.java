@@ -33,4 +33,9 @@ public class EmptyCommand implements Command {
 	public COMMANDS_TABLE getType() {
 		return COMMANDS_TABLE.EMPTY;
 	}
+
+	@Override
+	public String repr() {
+		return "// "+line;
+	}
 }

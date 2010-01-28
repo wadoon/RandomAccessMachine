@@ -1,6 +1,7 @@
 package weigl.ram.compiler;
 
 import java.io.IOException;
+
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -8,17 +9,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import weigl.ram.RAMachine;
+import weigl.ram.commands.AbstractCommand;
 import weigl.ram.commands.Add;
 import weigl.ram.commands.Command;
 import weigl.ram.commands.Goto;
 import weigl.ram.commands.Input;
 import weigl.ram.commands.JZero;
 import weigl.ram.commands.Load;
-import weigl.ram.commands.Print;
 import weigl.ram.commands.Store;
 import weigl.ram.commands.Sub;
-import weigl.stgr.controller.Builder;
-import weigl.stgr.controller.StgrBuilder;
 
 /**
  * <pre>
@@ -90,7 +90,7 @@ public class BrainFuckCompiler {
 			break;
 		case '.':
 			list.add(new Load("*1"));
-			list.add(new Print());
+			list.add(new BFOutput());
 			break;
 		case ',':
 			list.add(new Input());
@@ -140,5 +140,16 @@ public class BrainFuckCompiler {
 
 	private void load_1() {
 		list.add(new Load("#1"));
+	}
+}
+
+class BFOutput extends AbstractCommand{
+	public BFOutput() {
+		super("0", null);
+	}
+
+	@Override
+	public void exec(RAMachine machine) {
+		System.out.print((char)machine.rget(getOperand()));
 	}
 }

@@ -16,6 +16,11 @@ public abstract class AbstractCommand implements Command {
 	public abstract void exec(RAMachine machine);
 
 	@Override
+	public String repr() {
+		return toString() + " " + getOperand();
+	}
+
+	@Override
 	public final String toString()
     {
         return getType().toString();

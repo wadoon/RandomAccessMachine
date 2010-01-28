@@ -15,4 +15,5 @@ import weigl.ram.RAMachine;
 public interface Command {
     public void exec(RAMachine machine);
     public COMMANDS_TABLE getType();
+    public String repr();
 }
