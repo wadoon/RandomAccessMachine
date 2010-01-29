@@ -2,13 +2,22 @@ package weigl.ram.compiler.lisprules;
 
 import java.util.Arrays;
 import java.util.LinkedList;
-
 import java.util.List;
 
 import weigl.ram.commands.Command;
 import weigl.ram.commands.EmptyCommand;
-
-import static weigl.ram.commands.ext.ExtendedCommands.*;
+import weigl.ram.commands.ext.ExtendedCommands.Add;
+import weigl.ram.commands.ext.ExtendedCommands.Div;
+import weigl.ram.commands.ext.ExtendedCommands.End;
+import weigl.ram.commands.ext.ExtendedCommands.Goto;
+import weigl.ram.commands.ext.ExtendedCommands.JGtZero;
+import weigl.ram.commands.ext.ExtendedCommands.JLtZero;
+import weigl.ram.commands.ext.ExtendedCommands.JZero;
+import weigl.ram.commands.ext.ExtendedCommands.Load;
+import weigl.ram.commands.ext.ExtendedCommands.Multi;
+import weigl.ram.commands.ext.ExtendedCommands.Print;
+import weigl.ram.commands.ext.ExtendedCommands.Store;
+import weigl.ram.commands.ext.ExtendedCommands.Sub;
 
 public class CommandFactory {
 	public static List<Command> create(Command... c) {
@@ -17,8 +26,13 @@ public class CommandFactory {
 
 	public static List<Command> create(String comment, Command... c) {
 		List<Command> l = new LinkedList<Command>();
-		l.add(0, new EmptyCommand(comment));
+		l.add(new EmptyCommand(comment));
+		l.addAll(create(c));
 		return l;
+	}
+
+	public static EmptyCommand comment(String line) {
+		return new EmptyCommand(line);
 	}
 
 	public static Store store(String addr) {
@@ -78,11 +92,11 @@ public class CommandFactory {
 	}
 
 	public static Div divr(int register) {
-		return div(""+register);
+		return div("" + register);
 	}
 
 	public static Div divc(int c) {
-		return div("#"+c);
+		return div("#" + c);
 	}
 
 	public static JZero jzero(String addr) {
@@ -95,6 +109,14 @@ public class CommandFactory {
 
 	public static JZero jzero(int line) {
 		return jzero("#" + line);
+	}
+
+	public static JZero jzeror(int line) {
+		return jzero("+" + line);
+	}
+
+	public static Goto gotor(int line) {
+		return goto_("+" + line);
 	}
 
 	public static Goto goto_(int line) {

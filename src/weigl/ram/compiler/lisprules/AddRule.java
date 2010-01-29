@@ -1,13 +1,10 @@
 package weigl.ram.compiler.lisprules;
 
+import static weigl.ram.compiler.lisprules.CommandFactory.addr;
 
 import java.util.List;
 
-import weigl.ram.commands.Add;
 import weigl.ram.commands.Command;
-import weigl.ram.commands.Load;
-import weigl.ram.compiler.lisp.Atom;
-import static weigl.ram.compiler.lisprules.CommandFactory.*;
 
 public class AddRule extends AbstractBinaryOperation {
 	public AddRule() {

@@ -6,19 +6,17 @@ import weigl.ram.commands.Command;
 import weigl.ram.compiler.lisp.ExecutionContext;
 import weigl.ram.compiler.lisp.LispList;
 
-public class ExecRule extends TranslationRule {
+public class FreeRule extends TranslationRule {
 
-	public ExecRule() {
-		super("exec");
+	public FreeRule() {
+		super("free");
 
 	}
 
 	@Override
 	public List<Command> visit(ExecutionContext ec, LispList ll) {
-		List<Command> cl = createList();
-		for (int i = 1; i < ll.getElements().size(); i++)
-			dispatchExecution(ec, cl, (LispList) ll.get(i));
-		return cl;
+		String v = asAtom(ll, 1).TEXT;
+		ec.releaseVariable(v);
+		return CommandFactory.create("Free " + v);
 	}
-
 }

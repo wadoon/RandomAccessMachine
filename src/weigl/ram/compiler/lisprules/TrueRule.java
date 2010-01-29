@@ -6,19 +6,16 @@ import weigl.ram.commands.Command;
 import weigl.ram.compiler.lisp.ExecutionContext;
 import weigl.ram.compiler.lisp.LispList;
 
-public class ExecRule extends TranslationRule {
+public class TrueRule extends TranslationRule {
 
-	public ExecRule() {
-		super("exec");
+	public TrueRule() {
+		super("true");
 
 	}
 
 	@Override
 	public List<Command> visit(ExecutionContext ec, LispList ll) {
-		List<Command> cl = createList();
-		for (int i = 1; i < ll.getElements().size(); i++)
-			dispatchExecution(ec, cl, (LispList) ll.get(i));
-		return cl;
+		return CommandFactory.create("Loading True", CommandFactory.load("#1"));
 	}
 
 }

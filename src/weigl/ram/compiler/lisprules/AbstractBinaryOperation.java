@@ -1,6 +1,5 @@
 package weigl.ram.compiler.lisprules;
 
-import static weigl.ram.compiler.lisprules.CommandFactory.addr;
 import static weigl.ram.compiler.lisprules.CommandFactory.loadr;
 
 import java.util.List;
@@ -33,9 +32,9 @@ public abstract class AbstractBinaryOperation extends TranslationRule {
 
 		cl.add(loadr(posX));
 		addOperation(cl, posX, posY);
-		
-		ec.free(posX,posY);
-		
+
+		ec.free(posX, posY);
+
 		return cl;
 	}
 

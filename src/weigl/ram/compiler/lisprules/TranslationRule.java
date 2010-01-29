@@ -1,7 +1,6 @@
 package weigl.ram.compiler.lisprules;
 
 import static weigl.ram.compiler.lisprules.CommandFactory.load;
-
 import static weigl.ram.compiler.lisprules.CommandFactory.loadr;
 
 import java.util.LinkedList;
@@ -9,11 +8,17 @@ import java.util.List;
 
 import weigl.ram.commands.Command;
 import weigl.ram.compiler.lisp.Atom;
+import weigl.ram.compiler.lisp.CompilerException;
 import weigl.ram.compiler.lisp.Constant;
 import weigl.ram.compiler.lisp.ExecutionContext;
 import weigl.ram.compiler.lisp.LispList;
 import weigl.ram.compiler.lisp.LispType;
 
+/**
+ * defines a tranlation rule from an {@link Atom} to the {@link Command}s
+ * 
+ * @author Alexander Weigl <alexweigl@gmail.com>
+ */
 public abstract class TranslationRule {
 	protected Atom atom;
 	private Translator translator;
@@ -40,22 +45,18 @@ public abstract class TranslationRule {
 		try {
 			return (Atom) ll.get(pos);
 		} catch (ClassCastException cce) {
-			System.err.println("Function " + atom + " expected value " + pos
-					+ " as an Name");
-			System.exit(1);
+			throw new CompilerException("Function " + atom + " expected value "
+					+ pos + " as an Name", cce);
 		}
-		return null;
 	}
 
 	protected Constant asConstant(LispList ll, int pos) {
 		try {
 			return (Constant) ll.get(pos);
 		} catch (ClassCastException cce) {
-			System.err.println("Function " + atom + " expected value " + pos
-					+ " as an Constant");
-			System.exit(1);
+			throw new CompilerException("Function " + atom + " expected value "
+					+ pos + " as an Constant", cce);
 		}
-		return null;
 	}
 
 	protected List<Command> valueTo(ExecutionContext ec, LispList ll, int pos,
@@ -74,7 +75,7 @@ public abstract class TranslationRule {
 
 		if (lispType instanceof LispList) {
 			LispList list = (LispList) lispType;
-			dispatchExecution(ec,cl, list);
+			dispatchExecution(ec, cl, list);
 		}
 		cl.add(CommandFactory.storer(register));
 		return cl;
@@ -87,5 +88,12 @@ public abstract class TranslationRule {
 
 	public void setTranslator(Translator tr) {
 		translator = tr;
+	}
+
+	protected List<Command> dispatchExecution(ExecutionContext ec,
+			LispList lispList) {
+		List<Command> l = createList();
+		dispatchExecution(ec, l, lispList);
+		return l;
 	}
 }

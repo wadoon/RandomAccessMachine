@@ -1,11 +1,10 @@
 package weigl.ram.compiler;
 
 import java.io.IOException;
-import java.io.Reader;
+
 import java.util.LinkedList;
 import java.util.List;
 
-import com.sun.org.apache.xml.internal.resolver.helpers.FileURL;
 
 import weigl.io.file.FileUtils;
 import weigl.ram.commands.Command;
@@ -15,12 +14,16 @@ import weigl.ram.compiler.lisprules.AddRule;
 import weigl.ram.compiler.lisprules.DefineRule;
 import weigl.ram.compiler.lisprules.DivRule;
 import weigl.ram.compiler.lisprules.ExecRule;
+import weigl.ram.compiler.lisprules.FreeRule;
+import weigl.ram.compiler.lisprules.GtRule;
 import weigl.ram.compiler.lisprules.IfRule;
+import weigl.ram.compiler.lisprules.LtRule;
 import weigl.ram.compiler.lisprules.MultRule;
 import weigl.ram.compiler.lisprules.PrintRule;
 import weigl.ram.compiler.lisprules.SetExprRule;
 import weigl.ram.compiler.lisprules.SubRule;
 import weigl.ram.compiler.lisprules.Translator;
+import weigl.ram.compiler.lisprules.TrueRule;
 import weigl.ram.compiler.lisprules.WhileRule;
 
 public class LispCompiler {
@@ -43,7 +46,11 @@ public class LispCompiler {
 				new SetExprRule(),
 				new DefineRule(),
 				new ExecRule(),
-				new PrintRule()
+				new PrintRule(),
+				new FreeRule(),
+				new LtRule(),
+				new GtRule(),
+				new TrueRule()
 		);
 	}
 
@@ -56,15 +63,16 @@ public class LispCompiler {
 		{
 			translator.translate(ec,list, lispList);
 		}
+		int i = 1;
 		for (Command command : list) {
-			System.out.println(command.repr());
+			System.out.format("%5d: %s%n", i++,command.repr());
 		}
-		
 	}
 	
 	public static void main(String[] args) throws IOException {
 //		String s = "(+ (- 1 1) 1)";
 		String s = FileUtils.readFile("npowerm.lisp");
+//		String s = FileUtils.readFile("while.lisp");
 		LispCompiler lc = new LispCompiler();
 		lc.compile(s);
 	}

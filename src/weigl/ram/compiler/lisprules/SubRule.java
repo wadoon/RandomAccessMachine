@@ -8,12 +8,12 @@ public class SubRule extends AbstractBinaryOperation {
 
 	public SubRule() {
 		super("-");
-		
+
 	}
 
 	@Override
 	protected void addOperation(List<Command> cl, int v1, int v2) {
-		cl.add(CommandFactory.sub(""+v2));
+		cl.add(CommandFactory.sub("" + v2));
 	}
 
 }

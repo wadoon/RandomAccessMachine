@@ -84,6 +84,10 @@ public class RAMachine {
 		case '*':
 			pos = rget(Integer.parseInt(index.substring(1)));
 			break;
+		case '+'://relative jump
+			return Integer.parseInt(index.substring(1))+getProgramCounter();
+		case '-'://relative jump
+			return getProgramCounter()-Integer.parseInt(index.substring(1));
 		default:
 			pos = Integer.parseInt(index);
 		}

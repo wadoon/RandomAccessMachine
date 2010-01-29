@@ -1,9 +1,10 @@
 package weigl.ram.compiler.lisprules;
 
+import static weigl.ram.compiler.lisprules.CommandFactory.divr;
+
 import java.util.List;
 
 import weigl.ram.commands.Command;
-import static weigl.ram.compiler.lisprules.CommandFactory.divr;
 
 public class DivRule extends AbstractBinaryOperation {
 	public DivRule() {

@@ -30,7 +30,6 @@ public class LispParser {
 	}
 
 	private void handle(Tuple2<TOKEN_TYPE, String> token) {
-		System.out.println(token);
 		switch (token.get1()) {
 		case LPAREN:
 			LispList list = new LispList();
@@ -58,7 +57,7 @@ public class LispParser {
 }
 
 class Tokenizer implements Iterable<Tuple2<TOKEN_TYPE, String>> {
-	static final String ID_CHARS = "[a-zA-Z+<>=-_.:,;!$%&/=]";
+	//private static final String ID_CHARS = "[a-zA-Z+<>=-_.:,;!$%&/=]";
 	final static Pattern tokens = TOKEN_TYPE.buildRegex();
 	private LinkedList<Tuple2<TOKEN_TYPE, String>> tokenList;
 
