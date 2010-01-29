@@ -41,36 +41,39 @@ public class ExtendedCommands {
 		}
 	}
 
-	public static class JLtZero extends weigl.ram.commands.AbstractCommand {
-		private Map<String, Integer> jumpTable;
 
-		public JLtZero(Map<String, Integer> jumpTable, String p) {
-			super(p,COMMANDS_TABLE.JZERO);
-			this.jumpTable = jumpTable;
-		}
-
-		public void exec(RAMachine machine) {
-			if (machine.rget(0) < 0)
-				new Goto(jumpTable, operand).exec(machine);
-			else
-				machine.nextInstruction();
-		}
-	}
-	public static class JGtZero extends AbstractCommand {
-		private Map<String, Integer> jumpTable;
-		
-		public JGtZero(Map<String, Integer> jumpTable, String p) {
-			super(p,COMMANDS_TABLE.JZERO);
-			this.jumpTable = jumpTable;
+	public static class LT extends AbstractCommand {
+		public LT(String p) {
+			super(p,COMMANDS_TABLE.LT);
 		}
 		
-		public void exec(RAMachine machine) {
-			if (machine.rget(0) > 0)
-				new Goto(jumpTable, operand).exec(machine);
-			else
-				machine.nextInstruction();
+		//> 6 5
+		// c(0) = 6 
+		public void exec(RAMachine machine) 
+		{
+			int r1= machine.rget(0);
+			int r2 = machine.rget(getOperand());
+			machine.rset(0, r1<r2?1:0);
+			machine.nextInstruction();
 		}
 	}
+	
+	public static class GT extends AbstractCommand {
+		public GT(String p) {
+			super(p,COMMANDS_TABLE.GT);
+		}
+		
+		//> 6 5
+		// c(0) = 6 
+		public void exec(RAMachine machine) 
+		{
+			int r1= machine.rget(0);
+			int r2 = machine.rget(getOperand());
+			machine.rset(0, r1>r2?1:0);
+			machine.nextInstruction();
+		}
+	}
+	
 	public static class Load extends weigl.ram.commands.Load {
 		public Load(String string) {
 			super(string);
@@ -97,7 +100,7 @@ public class ExtendedCommands {
 
 	public static class Sub extends AbstractCommand {
 		public Sub(String p) {
-			super(p,COMMANDS_TABLE.SUB);
+			super(p,COMMANDS_TABLE.ESUB);
 		}
 
 		@Override

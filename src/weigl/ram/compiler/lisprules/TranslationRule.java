@@ -63,10 +63,10 @@ public abstract class TranslationRule {
 			int register) {
 		List<Command> cl = createList();
 		LispType lispType = ll.get(pos);
+		
 		if (lispType instanceof Atom) {
 			Atom atom = (Atom) lispType;
-			loadr(ec.getFieldPosition(atom.TEXT));
-
+			cl.add(loadr(ec.getFieldPosition(atom.TEXT)));
 		}
 		if (lispType instanceof Constant) {
 			Constant constant = (Constant) lispType;

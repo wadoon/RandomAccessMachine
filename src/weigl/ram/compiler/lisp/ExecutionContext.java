@@ -40,7 +40,7 @@ public class ExecutionContext {
 	public int getFieldPosition(String varname) {
 		if (!varMap.containsKey(varname)) {
 			System.err.println(varname + "  was not defined, define it now!");
-			return -1;
+			defineVariable(varname);
 		}
 		return varMap.get(varname);
 	}

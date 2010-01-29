@@ -52,9 +52,9 @@ public class WhileRule extends TranslationRule {
 		cl.add(comment("do check"));
 		cl.addAll(check);
 		// jzero
-		cl.add(jzeror(2));
+		cl.add(jzeror(3));
 		// goto 2
-		cl.add(goto_("-" + (cl.size() - 2)));
+		cl.add(goto_("-" + (cl.size() - 3)));
 		cl.add(comment("ENDHWILE"));
 		return cl;
 	}

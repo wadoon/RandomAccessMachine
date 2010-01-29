@@ -1,17 +1,16 @@
 package weigl.ram;
 
-
 /**
  * All commands as an constant.
- *
- *
+ * 
+ * 
  * @author Alexander Weigl <alexweigl@gmail.com>
- * @date   10.11.2009
+ * @date 10.11.2009
  * @version 1
- *
+ * 
  */
 public enum COMMANDS_TABLE {
-	STORE, LOAD, ADD, MULT, DIV, SUB, END, JZERO, GOTO, PRINT, INPUT, EMPTY;
+	STORE, LOAD, ADD, MULT, DIV, SUB, END, JZERO, GOTO, PRINT, INPUT, EMPTY, GT, LT, ESUB, EQ;
 
 	public static String[] valueList() {
 		String[] s = new String[values().length];

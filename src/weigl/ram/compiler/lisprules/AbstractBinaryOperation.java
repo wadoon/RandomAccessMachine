@@ -37,6 +37,13 @@ public abstract class AbstractBinaryOperation extends TranslationRule {
 
 		return cl;
 	}
-
+	
+	/**
+	 * use this method to implement the invidual action for the operation.
+	 * The state is: the value behind register one is loaded c(0)  
+	 * @param cl
+	 * @param v1
+	 * @param v2
+	 */
 	protected abstract void addOperation(List<Command> cl, int v1, int v2);
 }

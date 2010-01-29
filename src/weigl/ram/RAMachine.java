@@ -8,12 +8,17 @@ import weigl.ram.listeners.MachineListener;
 public class RAMachine {
 
 	private List<MachineListener> listener = new LinkedList<MachineListener>();
-	private Registers reg = new Registers(25);
+	private Registers reg;
 	private Command[] commands;
 	private int curline = 0;
 
 	public RAMachine(Command[] c) {
+		this(c, 25);
+	}
+
+	public RAMachine(Command[] c, int memsz) {
 		commands = c;
+		reg = new Registers(memsz);
 	}
 
 	public void addListener(MachineListener ml) {
@@ -84,15 +89,14 @@ public class RAMachine {
 		case '*':
 			pos = rget(Integer.parseInt(index.substring(1)));
 			break;
-		case '+'://relative jump
-			return Integer.parseInt(index.substring(1))+getProgramCounter();
-		case '-'://relative jump
-			return getProgramCounter()-Integer.parseInt(index.substring(1));
+		case '+':// relative jump
+			return Integer.parseInt(index.substring(1)) + getProgramCounter();
+		case '-':// relative jump
+			return getProgramCounter() - Integer.parseInt(index.substring(1));
 		default:
 			pos = Integer.parseInt(index);
 		}
 
-		
 		if (pos > 0) {
 			return rget(pos);
 		} else {

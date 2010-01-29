@@ -3,10 +3,8 @@ package weigl.ram.compiler.lisprules;
 import java.util.List;
 
 import weigl.ram.commands.Command;
-import weigl.ram.compiler.lisp.ExecutionContext;
-import weigl.ram.compiler.lisp.LispList;
 
-public class LtRule extends TranslationRule {
+public class LtRule extends AbstractBinaryOperation {
 
 	public LtRule() {
 		super("<");
@@ -14,9 +12,7 @@ public class LtRule extends TranslationRule {
 	}
 
 	@Override
-	public List<Command> visit(ExecutionContext ec, LispList ll) {
-		// TODO
-		return createList();
+	protected void addOperation(List<Command> cl, int v1, int v2) {
+		cl.add(CommandFactory.ltr(v2));
 	}
-
 }

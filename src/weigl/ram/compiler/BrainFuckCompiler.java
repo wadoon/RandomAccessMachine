@@ -1,7 +1,6 @@
 package weigl.ram.compiler;
 
 import java.io.IOException;
-
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -38,8 +37,6 @@ public class BrainFuckCompiler {
 
 	private Map<String, Integer> map = new HashMap<String, Integer>();
 	private Stack<Integer> loopStack = new Stack<Integer>();
-
-	private int loop = 0;
 
 	private Stack<Goto> loopStackGoto = new Stack<Goto>();
 
