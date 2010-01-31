@@ -8,8 +8,8 @@ import weigl.ram.commands.Command;
 import weigl.ram.compiler.lisp.ExecutionContext;
 import weigl.ram.compiler.lisp.LispList;
 
-public class SetExprRule extends TranslationRule {
-	public SetExprRule() {
+public class SetRule extends TranslationRule {
+	public SetRule() {
 		super("set");
 	}
 

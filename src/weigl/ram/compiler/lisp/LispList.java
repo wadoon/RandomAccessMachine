@@ -5,7 +5,10 @@ import java.util.List;
 
 import weigl.ram.commands.Command;
 
-
+/**
+ * 
+ * @author Alexander Weigl <alexweigl@gmail.com>
+ */
 public class LispList implements LispType {
 	List<LispType> elements = new LinkedList<LispType>();
 

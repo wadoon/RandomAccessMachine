@@ -2,16 +2,18 @@ package weigl.ram.compiler.lisp;
 
 import java.util.HashMap;
 
+
 /**
- * Class holds the that is needed during compilation 
+ * Class holds the that is needed during compilation
+ * 
  * @author Alexander Weigl <alexweigl@gmail.com>
- *
+ * 
  */
 public class ExecutionContext {
 	/**
 	 * size of the area for temporary objects
 	 */
-	public static final int STACK_SZ = 100;
+	public static int STACK_SZ = 100;
 
 	/**
 	 * maximal position for known variables
@@ -28,7 +30,28 @@ public class ExecutionContext {
 	private int stackOffset = MAX_POS + 1;
 	private boolean[] stackMap = new boolean[STACK_SZ];
 
-	public ExecutionContext() {}
+	public ExecutionContext() {
+	}
+
+	/**
+	 * set execution options
+	 * 
+	 * @see Option
+	 * @param s
+	 * @param value
+	 */
+	public void setOption(String s, int value) {
+		Option o = Option.valueOf(s);
+		switch (o) {
+		case STACK_SIZE:
+			STACK_SZ = value;
+			break;
+		case MAX_STACK:
+			MAX_POS = value;
+		case MIN_STACK:
+			MIN_POS = value;
+		}
+	}
 
 	/**
 	 * get register for the variable
@@ -46,6 +69,17 @@ public class ExecutionContext {
 	}
 
 	/**
+	 * 
+	 * @param varname
+	 * @param register
+	 * @return
+	 */
+	public int bindField(String varname, int register) {
+		varMap.put(varname, register);
+		return register;
+	}
+
+	/**
 	 * register the variable. a register will be reserved for this variable
 	 * 
 	 * @param varname
@@ -53,12 +87,12 @@ public class ExecutionContext {
 	 */
 	public int defineVariable(String varname) {
 		int i = findFree();
-		varMap.put(varname, i);
-		return i;
+		return bindField(varname, i);
 	}
 
 	/**
 	 * remove the register that is hold by this variable
+	 * 
 	 * @param varname
 	 */
 	public void releaseVariable(String varname) {
@@ -80,6 +114,7 @@ public class ExecutionContext {
 
 	/**
 	 * return a free stack register
+	 * 
 	 * @return
 	 */
 	public int reserve() {
@@ -94,6 +129,7 @@ public class ExecutionContext {
 
 	/**
 	 * release a stack register
+	 * 
 	 * @param i
 	 */
 	public void free(int i) {
@@ -103,10 +139,15 @@ public class ExecutionContext {
 
 	/**
 	 * release the stack registers
+	 * 
 	 * @param pos
 	 */
 	public void free(int... pos) {
 		for (int i : pos)
 			free(i);
 	}
+}
+
+enum Option {
+	STACK_SIZE, MIN_STACK, MAX_STACK;
 }
