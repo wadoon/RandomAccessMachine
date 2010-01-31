@@ -1,16 +1,21 @@
 package weigl.ram.compiler.lisprules;
 
 import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 
 import weigl.ram.commands.Command;
 import weigl.ram.compiler.lisp.Atom;
+import weigl.ram.compiler.lisp.CompilerException;
 import weigl.ram.compiler.lisp.ExecutionContext;
+import weigl.ram.compiler.lisp.LispFunction;
 import weigl.ram.compiler.lisp.LispList;
 
 public class Translator {
-	private Map<Atom, TranslationRule> assoc = new HashMap<Atom, TranslationRule>();
+	private Map<Atom, TranslationRule> ruleMap = new HashMap<Atom, TranslationRule>();
+	private Map<String, LispFunction> functionMap = new HashMap<String, LispFunction>();
+	private CallUserFunction caller = new CallUserFunction();
 
 	public Translator() {
 	}
@@ -21,22 +26,35 @@ public class Translator {
 	}
 
 	public void register(TranslationRule tr) {
-		tr.setTranslator(this);
-		assoc.put(tr.getAtom(), tr);
+		ruleMap.put(tr.getAtom(), tr);
 	}
 
 	public void deregister(TranslationRule tr) {
-		assoc.remove(tr.getAtom());
+		ruleMap.remove(tr.getAtom());
 	}
 
 	public void translate(ExecutionContext ec, List<Command> cl, LispList list) {
 		Atom a = (Atom) list.get(0);
-		TranslationRule tr = assoc.get(a);
+		TranslationRule tr = ruleMap.get(a);
 		if (tr != null) {
-			// System.out.println(tr.getClass());
 			cl.addAll(tr.visit(ec, list));
 		} else {
-			System.err.println("Function " + a + " could not be found!");
+			translateFunction(ec, a.TEXT, cl, list);
 		}
+	}
+
+	private void translateFunction(ExecutionContext ec, String name,
+			List<Command> cl, LispList list) {
+		LispFunction function = functionMap.get(name);
+		if (function != null) {
+			cl.addAll(caller.visit(ec, list, function));
+		} else {
+			throw new CompilerException("A function with name '" + name
+					+ "' was not found!");
+		}
+	}
+
+	public Map<String, LispFunction> getFunctions() {
+		return functionMap;
 	}
 }

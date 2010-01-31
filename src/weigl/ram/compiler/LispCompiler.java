@@ -1,6 +1,5 @@
 package weigl.ram.compiler;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -14,9 +13,11 @@ import weigl.io.file.FileUtils;
 import weigl.ram.RAMachine;
 import weigl.ram.commands.Command;
 import weigl.ram.compiler.lisp.ExecutionContext;
+import weigl.ram.compiler.lisp.LispFunction;
 import weigl.ram.compiler.lisp.LispList;
 import weigl.ram.compiler.lisprules.AddRule;
 import weigl.ram.compiler.lisprules.BindRule;
+import weigl.ram.compiler.lisprules.CommentRule;
 import weigl.ram.compiler.lisprules.DefineRule;
 import weigl.ram.compiler.lisprules.DivRule;
 import weigl.ram.compiler.lisprules.ExecRule;
@@ -26,17 +27,15 @@ import weigl.ram.compiler.lisprules.IfRule;
 import weigl.ram.compiler.lisprules.LtRule;
 import weigl.ram.compiler.lisprules.MultRule;
 import weigl.ram.compiler.lisprules.PrintRule;
-import weigl.ram.compiler.lisprules.SetRule;
+import weigl.ram.compiler.lisprules.ReturnRule;
 import weigl.ram.compiler.lisprules.SetOptRule;
+import weigl.ram.compiler.lisprules.SetRule;
 import weigl.ram.compiler.lisprules.SubRule;
 import weigl.ram.compiler.lisprules.Translator;
 import weigl.ram.compiler.lisprules.TrueRule;
 import weigl.ram.compiler.lisprules.WhileRule;
 import weigl.ram.listeners.MachineListener;
 import weigl.ram.listeners.UniformCosts;
-import weigl.ram.view.ListenerEDTAdapter;
-import weigl.ram.view.RegistersView;
-import weigl.ram.view.WaitListener;
 
 public class LispCompiler {
 	private Translator translator;
@@ -45,7 +44,6 @@ public class LispCompiler {
 	public LispCompiler() {
 		translator = new Translator();
 		registerRules();
-
 	}
 
 	private void registerRules() {
@@ -53,17 +51,19 @@ public class LispCompiler {
 				new DivRule(), new MultRule(), new WhileRule(), new SetRule(),
 				new DefineRule(), new ExecRule(), new PrintRule(),
 				new FreeRule(), new LtRule(), new GtRule(), new TrueRule(),
-				new BindRule(), new SetOptRule());
+				new BindRule(), new SetOptRule(), new ReturnRule(),
+				new DefineRule(), new CommentRule());
 	}
 
 	public List<Command> compile(String source) {
 		LispParser lp = new LispParser(source);
 		List<LispList> rootLists = lp.getRootLists();
-		ExecutionContext ec = new ExecutionContext();
+		ExecutionContext ec = new ExecutionContext(this);
 		final List<Command> list = new LinkedList<Command>();
 		for (LispList lispList : rootLists) {
 			translator.translate(ec, list, lispList);
 		}
+
 		int i = 1;
 		for (Command command : list) {
 			System.out.format("%5d: %s%n", i++, command.repr());
@@ -82,16 +82,27 @@ public class LispCompiler {
 				filename + ".registers");
 
 		RAMachine machine = new RAMachine(l.toArray(new Command[] {}), 200);
-		machine.addListener(new WaitListener(1000));
+//		machine.addListener(new WaitListener(1000));
 		machine.addListener(new UniformCosts());
-		if (tester != null)
+
+//		RegistersView rw = new RegistersView();
+//		rw.pack();
+//		rw.setVisible(true);
+//		machine.addListener(rw);
+
+//		machine.addListener(new MachineAdapter() {
+//			@Override
+//			public void machineStop(RAMachine machine) {
+//				for (int i = 10; i <= 30; i++) 
+//				{
+//					System.out.print( machine.rget(i) + " ");
+//				}
+//			}
+//			
+//		});
+
+		if  (tester != null)
 			machine.addListener(tester);
-		
-		
-		RegistersView rw = new RegistersView();
-		rw.pack();
-		rw.setVisible(true);
-		machine.addListener(rw);
 		
 		machine.start();
 	}
@@ -110,7 +121,7 @@ public class LispCompiler {
 
 			// transfer to map
 			while (e.hasMoreElements()) {
-				String o = e.nextElement().toString();				
+				String o = e.nextElement().toString();
 				Integer j = new Integer(p.getProperty(o));
 				Integer i;
 				try {
@@ -124,12 +135,21 @@ public class LispCompiler {
 			return new RegisterTest(map);
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			return null;
 		}
 	}
 
+	public void defineFunction(String name, LispList body, String... params) {
+		translator.getFunctions().put(name,
+				LispFunction.create(name, body, params));
+	}
+
+	public Translator getTranslator() {
+		return translator;
+	}
+
 	public static void main(String[] args) throws IOException {
-		runTestCompiler("examples/iftest");
+		runTestCompiler("examples/func");
 	}
 }

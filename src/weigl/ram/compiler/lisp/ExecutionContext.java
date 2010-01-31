@@ -1,7 +1,11 @@
 package weigl.ram.compiler.lisp;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 
+import weigl.ram.compiler.LispCompiler;
+import weigl.ram.compiler.lisprules.Translator;
 
 /**
  * Class holds the that is needed during compilation
@@ -25,12 +29,29 @@ public class ExecutionContext {
 	 */
 	public static int MIN_POS = 10;
 
-	private HashMap<String, Integer> varMap = new HashMap<String, Integer>();
+	private Map<String, Integer> varMap = new HashMap<String, Integer>();
 	private boolean[] varAreaMap = new boolean[MAX_POS - MIN_POS];
 	private int stackOffset = MAX_POS + 1;
 	private boolean[] stackMap = new boolean[STACK_SZ];
+	private Stack<Map<String, Integer>> scopeStack = new Stack<Map<String, Integer>>();
 
-	public ExecutionContext() {
+	private LispCompiler compiler;
+
+	public ExecutionContext(LispCompiler c) {
+		this.compiler = c;
+	}
+
+	public ExecutionContext(LispCompiler compiler,
+			Map<String, Integer> varMap,
+			boolean[] varAreaMap,
+			boolean[] stackMap, 
+			int stackOffset) 
+	{
+		this.varMap = new HashMap<String, Integer>(varMap);
+		this.varAreaMap = varAreaMap;
+		this.stackMap = stackMap;
+		this.stackOffset=stackOffset;
+		this.compiler = compiler;
 	}
 
 	/**
@@ -145,6 +166,26 @@ public class ExecutionContext {
 	public void free(int... pos) {
 		for (int i : pos)
 			free(i);
+	}
+
+	public LispCompiler getCompiler() {
+		return compiler;
+	}
+
+	public Translator getTranslator() {
+		return getCompiler().getTranslator();
+	}
+
+	public ExecutionContext pushNames() {
+		scopeStack.push(varMap);
+		varMap = new HashMap<String, Integer>();
+		return new ExecutionContext(getCompiler(), scopeStack.peek(), varAreaMap, this.stackMap, stackOffset);
+	}
+
+	public void popNames() {
+		for (Integer i : varMap.values()) 
+			varAreaMap[i - MIN_POS] = false;
+		varMap = scopeStack.pop();
 	}
 }
 

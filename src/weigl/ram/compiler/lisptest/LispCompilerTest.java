@@ -16,4 +16,9 @@ public class LispCompilerTest {
 	{
 		LispCompiler.runTestCompiler("examples/iftest");
 	}
+
+	@Test public void run_functest() throws IOException
+	{
+		LispCompiler.runTestCompiler("examples/func");
+	}
 }

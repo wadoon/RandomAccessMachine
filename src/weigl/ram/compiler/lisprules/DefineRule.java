@@ -3,29 +3,28 @@ package weigl.ram.compiler.lisprules;
 import java.util.List;
 
 import weigl.ram.commands.Command;
-import weigl.ram.commands.EmptyCommand;
-import weigl.ram.compiler.lisp.Atom;
 import weigl.ram.compiler.lisp.ExecutionContext;
 import weigl.ram.compiler.lisp.LispList;
-import weigl.ram.compiler.lisp.LispType;
 
 public class DefineRule extends TranslationRule {
 
 	public DefineRule() {
-		super("define");
+		super("def");
 	}
 
 	@Override
 	public List<Command> visit(ExecutionContext ec, LispList ll) {
-		List<Command> l = createList();
-		for (int i = 1; i < ll.getElements().size(); i++) {
-			LispType lt = ll.get(i);
-			String varname = ((Atom) lt).TEXT;
-			int pos = ec.defineVariable(varname);
-			l
-					.add(new EmptyCommand("define " + varname + " to register "
-							+ pos));
-		}
-		return l;
+		String funcname = asAtom(ll, 1).TEXT;
+		LispList parameters = asList(ll, 2); 
+		String params[] = new String[parameters.getElements().size()];
+		LispList body = asList(ll, 3);
+
+		for (int i = 0; i < parameters.getElements().size(); i++)
+			params[i] = asAtom(parameters, i).TEXT;
+
+		ec.getCompiler().defineFunction(funcname, body, params);
+
+		return CommandFactory.create(CommandFactory
+				.comment("define user function '" + funcname + "'"));
 	}
 }

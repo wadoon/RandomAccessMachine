@@ -21,7 +21,6 @@ import weigl.ram.compiler.lisp.LispType;
  */
 public abstract class TranslationRule {
 	protected Atom atom;
-	private Translator translator;
 
 	public TranslationRule(String atom) {
 		this(new Atom(atom));
@@ -35,7 +34,7 @@ public abstract class TranslationRule {
 		return atom;
 	}
 
-	protected List<Command> createList() {
+	protected static List<Command> createList() {
 		return new LinkedList<Command>();
 	}
 
@@ -59,11 +58,15 @@ public abstract class TranslationRule {
 		}
 	}
 
-	protected List<Command> valueTo(ExecutionContext ec, LispList ll, int pos,
+	protected LispList asList(LispList ll, int i) {
+		return (LispList) ll.get(i);
+	}
+
+	static List<Command> valueTo(ExecutionContext ec, LispList ll, int pos,
 			int register) {
 		List<Command> cl = createList();
 		LispType lispType = ll.get(pos);
-		
+
 		if (lispType instanceof Atom) {
 			Atom atom = (Atom) lispType;
 			cl.add(loadr(ec.getFieldPosition(atom.TEXT)));
@@ -81,16 +84,12 @@ public abstract class TranslationRule {
 		return cl;
 	}
 
-	protected void dispatchExecution(ExecutionContext ec, List<Command> cl,
+	static void dispatchExecution(ExecutionContext ec, List<Command> cl,
 			LispList list) {
-		translator.translate(ec, cl, list);
+		ec.getTranslator().translate(ec, cl, list);
 	}
 
-	public void setTranslator(Translator tr) {
-		translator = tr;
-	}
-
-	protected List<Command> dispatchExecution(ExecutionContext ec,
+	static List<Command> dispatchExecution(ExecutionContext ec,
 			LispList lispList) {
 		List<Command> l = createList();
 		dispatchExecution(ec, l, lispList);

@@ -1,7 +1,6 @@
 package weigl.ram.compiler;
 
 import java.util.Map;
-
 import java.util.Map.Entry;
 
 import weigl.ram.RAMachine;
