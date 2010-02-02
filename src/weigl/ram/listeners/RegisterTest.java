@@ -1,11 +1,10 @@
-package weigl.ram.compiler;
+package weigl.ram.listeners;
 
 import java.util.Map;
 import java.util.Map.Entry;
 
 import weigl.ram.RAMachine;
 import weigl.ram.Registers;
-import weigl.ram.listeners.MachineAdapter;
 
 public class RegisterTest extends MachineAdapter {
 

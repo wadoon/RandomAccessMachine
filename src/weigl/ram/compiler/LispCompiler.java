@@ -2,22 +2,26 @@ package weigl.ram.compiler;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import weigl.io.file.FileUtils;
 import weigl.ram.RAMachine;
 import weigl.ram.commands.Command;
+import weigl.ram.compiler.lisp.Atom;
 import weigl.ram.compiler.lisp.ExecutionContext;
 import weigl.ram.compiler.lisp.LispFunction;
 import weigl.ram.compiler.lisp.LispList;
 import weigl.ram.compiler.lisprules.AddRule;
 import weigl.ram.compiler.lisprules.BindRule;
 import weigl.ram.compiler.lisprules.CommentRule;
+import weigl.ram.compiler.lisprules.DefRule;
 import weigl.ram.compiler.lisprules.DefineRule;
 import weigl.ram.compiler.lisprules.DivRule;
 import weigl.ram.compiler.lisprules.ExecRule;
@@ -35,6 +39,7 @@ import weigl.ram.compiler.lisprules.Translator;
 import weigl.ram.compiler.lisprules.TrueRule;
 import weigl.ram.compiler.lisprules.WhileRule;
 import weigl.ram.listeners.MachineListener;
+import weigl.ram.listeners.RegisterTest;
 import weigl.ram.listeners.UniformCosts;
 
 public class LispCompiler {
@@ -52,7 +57,7 @@ public class LispCompiler {
 				new DefineRule(), new ExecRule(), new PrintRule(),
 				new FreeRule(), new LtRule(), new GtRule(), new TrueRule(),
 				new BindRule(), new SetOptRule(), new ReturnRule(),
-				new DefineRule(), new CommentRule());
+				new DefineRule(), new CommentRule(), new DefRule());
 	}
 
 	public List<Command> compile(String source) {
@@ -107,7 +112,7 @@ public class LispCompiler {
 		machine.start();
 	}
 
-	private ExecutionContext getLastExecutionContext() {
+	public ExecutionContext getLastExecutionContext() {
 		return lastExecutionContext;
 	}
 
@@ -151,5 +156,20 @@ public class LispCompiler {
 
 	public static void main(String[] args) throws IOException {
 		runTestCompiler("examples/func");
+	}
+
+	public Command[] compile(Reader r) throws IOException {
+		StringBuilder sb = new StringBuilder();
+		char[] cbuf = new char[1024];
+		int i = -1;
+		while((i = r.read(cbuf))>=0)
+			sb.append(cbuf,0,i);
+		
+		List<Command> list = compile(sb.toString());
+		return list.toArray(new Command[] {});
+	}
+
+	public Set<Atom> getRules() {
+		return translator.getRuleNames();
 	}
 }

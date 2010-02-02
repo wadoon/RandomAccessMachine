@@ -1,6 +1,8 @@
 package weigl.ram.compiler.lisprules;
 
-import static weigl.ram.compiler.lisprules.CommandFactory.*;
+import static weigl.ram.compiler.lisprules.CommandFactory.gotor;
+import static weigl.ram.compiler.lisprules.CommandFactory.jzeror;
+import static weigl.ram.compiler.lisprules.CommandFactory.loadr;
 
 import java.util.List;
 

@@ -5,8 +5,8 @@
 
 package weigl.ram.commands;
 
-import weigl.ram.*;
-import weigl.ram.commands.Command;
+import weigl.ram.COMMANDS_TABLE;
+import weigl.ram.RAMachine;
 
 /**
  * 

@@ -1,9 +1,9 @@
 package weigl.ram.compiler.lisprules;
 
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import weigl.ram.commands.Command;
 import weigl.ram.compiler.lisp.Atom;
@@ -56,5 +56,9 @@ public class Translator {
 
 	public Map<String, LispFunction> getFunctions() {
 		return functionMap;
+	}
+
+	public Set<Atom> getRuleNames() {
+		return ruleMap.keySet();
 	}
 }

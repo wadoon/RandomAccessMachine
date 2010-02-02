@@ -1,5 +1,6 @@
 package weigl.ram.compiler.lisp;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -186,6 +187,10 @@ public class ExecutionContext {
 		for (Integer i : varMap.values()) 
 			varAreaMap[i - MIN_POS] = false;
 		varMap = scopeStack.pop();
+	}
+
+	public Map<String, Integer> getVariableMap() {
+		return Collections.unmodifiableMap(varMap);
 	}
 }
 

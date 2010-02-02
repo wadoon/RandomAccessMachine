@@ -2,6 +2,7 @@ package weigl.ram;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import weigl.ram.commands.Command;
 import weigl.ram.listeners.MachineListener;
 
